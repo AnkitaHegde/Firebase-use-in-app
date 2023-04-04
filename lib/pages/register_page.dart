@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -15,12 +16,18 @@ class _RegisterPageState extends State<RegisterPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
+  final _ageController = TextEditingController();
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
+    _firstNameController.dispose();
+    _lastNameController.dispose();
+    _ageController.dispose();
     super.dispose();
   }
 
@@ -28,7 +35,27 @@ class _RegisterPageState extends State<RegisterPage> {
     if (_passwordController.text == _confirmPasswordController.text) {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: _emailController.text, password: _passwordController.text);
+
+      //add user details when authenticated
+      addUserDetails(
+        _firstNameController.text,
+        _lastNameController.text,
+        _emailController.text,
+        int.parse(_ageController.text),
+      );
     }
+  }
+
+  Future addUserDetails(
+      String firstName, String lastName, String email, int age) async {
+    await FirebaseFirestore.instance.collection('users').add({
+      //users is the collection we specified in firebase web
+      //here the format of how to fetch user details
+      'first name': firstName,
+      'last name': lastName,
+      'email': email,
+      'age': age,
+    });
   }
 
   @override
@@ -41,13 +68,6 @@ class _RegisterPageState extends State<RegisterPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
-                    Icons.android,
-                    size: 110,
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
                   Text(
                     "Hello There!!",
                     style: GoogleFonts.bebasNeue(fontSize: 45),
@@ -60,8 +80,70 @@ class _RegisterPageState extends State<RegisterPage> {
                     style: TextStyle(fontSize: 17),
                   ),
                   SizedBox(
-                    height: 50,
+                    height: 40,
                   ),
+
+                  //firstName field
+
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 25.0),
+                    child: Container(
+                      padding: EdgeInsets.all(10.0),
+                      decoration: BoxDecoration(
+                          color: Color.fromARGB(255, 232, 225, 227),
+                          borderRadius: BorderRadius.circular(5.0)),
+                      child: TextField(
+                        controller: _firstNameController,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: "First Name",
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  //last name
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 25.0),
+                    child: Container(
+                      padding: EdgeInsets.all(10.0),
+                      decoration: BoxDecoration(
+                          color: Color.fromARGB(255, 232, 225, 227),
+                          borderRadius: BorderRadius.circular(5.0)),
+                      child: TextField(
+                        controller: _lastNameController,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: "Last Name",
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 25.0),
+                    child: Container(
+                      padding: EdgeInsets.all(10.0),
+                      decoration: BoxDecoration(
+                          color: Color.fromARGB(255, 232, 225, 227),
+                          borderRadius: BorderRadius.circular(5.0)),
+                      child: TextField(
+                        controller: _ageController,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: "Age",
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 25.0),
                     child: Container(
