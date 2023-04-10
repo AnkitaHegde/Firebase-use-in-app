@@ -89,7 +89,7 @@ class _LoginpageState extends State<Loginpage> {
                           borderRadius: BorderRadius.circular(5.0)),
                       child: TextField(
                         controller: _passwordController,
-                        obscureText: false,
+                        obscureText: true,
                         decoration: InputDecoration(
                           errorBorder: OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.red)),
